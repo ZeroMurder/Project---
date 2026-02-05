@@ -1,0 +1,1580 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CableProduction - Агрегатор кабельной продукции</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+    
+    <!-- Кастомные стили -->
+    <style>
+        :root {
+            --black-primary: #0a0a0a;
+            --black-secondary: #121212;
+            --black-light: #1a1a1a;
+            --green-primary: #10b981;
+            --green-dark: #059669;
+            --green-light: #34d399;
+            --green-accent: #00ff88;
+            --text-white: #ffffff;
+            --text-gray: #a0a0a0;
+            --border-dark: #333333;
+            --radius: 10px;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', 'Roboto', sans-serif;
+            background-color: var(--black-primary);
+            color: var(--text-white);
+            line-height: 1.6;
+        }
+        
+        /* Верхняя зеленая панель */
+        .top-green-bar {
+            background: linear-gradient(135deg, var(--green-dark), var(--green-primary));
+            color: white;
+            padding: 8px 0;
+            font-size: 14px;
+        }
+        
+        .top-green-bar .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .top-contacts a {
+            color: white;
+            text-decoration: none;
+            margin-right: 20px;
+        }
+        
+        .top-contacts a:hover {
+            color: var(--black-primary);
+        }
+        
+        .top-contacts i {
+            margin-right: 5px;
+        }
+        
+        /* Навигация */
+        .navbar-custom {
+            background-color: var(--black-secondary);
+            padding: 15px 0;
+            border-bottom: 3px solid var(--green-primary);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.15);
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 24px;
+            color: var(--green-primary) !important;
+        }
+        
+        .navbar-brand span {
+            color: var(--text-white);
+        }
+        
+        .nav-link {
+            color: var(--text-white) !important;
+            font-weight: 500;
+            margin: 0 10px;
+            padding: 8px 15px !important;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link:hover, .nav-link.active {
+            background-color: var(--green-primary);
+            color: var(--black-primary) !important;
+        }
+        
+        .nav-link i {
+            margin-right: 8px;
+        }
+        
+        /* Главный баннер */
+        .hero-section {
+            background: linear-gradient(rgba(10, 10, 10, 0.85), rgba(10, 10, 10, 0.9)), 
+                        url('https://images.unsplash.com/photo-1581094794329-c8112a89af12?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80');
+            background-size: cover;
+            background-position: center;
+            padding: 100px 0;
+            margin-bottom: 60px;
+        }
+        
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            background: linear-gradient(to right, var(--green-primary), var(--green-accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.2rem;
+            color: var(--text-gray);
+            margin-bottom: 30px;
+            max-width: 600px;
+        }
+        
+        .btn-green {
+            background-color: var(--green-primary);
+            color: var(--black-primary);
+            font-weight: 600;
+            padding: 12px 30px;
+            border-radius: 5px;
+            border: none;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-green:hover {
+            background-color: var(--green-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(16, 185, 129, 0.3);
+        }
+        
+        /* Секции */
+        .section-title {
+            color: var(--green-primary);
+            font-weight: 700;
+            margin-bottom: 40px;
+            position: relative;
+            padding-bottom: 15px;
+        }
+        
+        .section-title:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 80px;
+            height: 4px;
+            background-color: var(--green-primary);
+        }
+        
+        .section-title.center:after {
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        /* Карточки товаров */
+        .product-card {
+            background-color: var(--black-light);
+            border-radius: var(--radius);
+            overflow: hidden;
+            border: 1px solid var(--border-dark);
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--green-primary);
+            box-shadow: 0 15px 30px rgba(16, 185, 129, 0.2);
+        }
+        
+        .product-img {
+            height: 200px;
+            background-color: var(--black-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--green-primary);
+            font-size: 48px;
+        }
+        
+        .product-body {
+            padding: 20px;
+        }
+        
+        .product-title {
+            color: var(--text-white);
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .product-specs {
+            color: var(--text-gray);
+            font-size: 14px;
+            margin-bottom: 15px;
+            min-height: 60px;
+        }
+        
+        .product-price {
+            color: var(--green-primary);
+            font-weight: 700;
+            font-size: 20px;
+            margin-bottom: 15px;
+        }
+        
+        .product-manufacturer {
+            color: var(--text-gray);
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+        
+        /* Категории */
+        .category-card {
+            background-color: var(--black-light);
+            border-radius: var(--radius);
+            padding: 30px 20px;
+            text-align: center;
+            border: 1px solid var(--border-dark);
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+        
+        .category-card:hover {
+            border-color: var(--green-primary);
+            background-color: rgba(16, 185, 129, 0.1);
+        }
+        
+        .category-icon {
+            width: 70px;
+            height: 70px;
+            background-color: rgba(16, 185, 129, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 30px;
+            color: var(--green-primary);
+        }
+        
+        /* Преимущества */
+        .feature-box {
+            background-color: var(--black-light);
+            border-radius: var(--radius);
+            padding: 30px;
+            border-left: 5px solid var(--green-primary);
+        }
+        
+        .feature-box i {
+            font-size: 40px;
+            color: var(--green-primary);
+            margin-bottom: 20px;
+        }
+        
+        /* Карта */
+        #map {
+            width: 100%;
+            height: 500px;
+            border-radius: var(--radius);
+            border: 1px solid var(--border-dark);
+            z-index: 1;
+        }
+        
+        .map-placeholder {
+            background-color: var(--black-light);
+            border-radius: var(--radius);
+            height: 500px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .map-placeholder i {
+            font-size: 80px;
+            color: var(--green-primary);
+            margin-bottom: 20px;
+        }
+        
+        /* Подвал */
+        .footer {
+            background-color: var(--black-secondary);
+            padding: 60px 0 30px;
+            margin-top: 80px;
+            border-top: 3px solid var(--green-primary);
+        }
+        
+        .footer-title {
+            color: var(--green-primary);
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        
+        .footer-links {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-links a {
+            color: var(--text-gray);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: var(--green-primary);
+            padding-left: 5px;
+        }
+        
+        .footer-bottom {
+            background-color: var(--black-primary);
+            padding: 20px 0;
+            margin-top: 40px;
+            border-top: 1px solid var(--border-dark);
+            color: var(--text-gray);
+        }
+        
+        /* Лоадер */
+        .loader {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .loader.active {
+            display: block;
+        }
+        
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .navbar-nav {
+                background-color: var(--black-light);
+                padding: 15px;
+                border-radius: 10px;
+                margin-top: 10px;
+            }
+            
+            .top-green-bar .container {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .top-contacts a {
+                margin: 0 10px;
+                display: inline-block;
+            }
+        }
+        
+        /* Анимации */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.8s ease-out;
+        }
+        
+        
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Уведомления -->
+    <div id="notificationArea"></div>
+    
+    <!-- Верхняя зеленая панель -->
+    <div class="top-green-bar">
+        <div class="container">
+            <div class="top-contacts">
+                <a href="mailto:info@cableproduction.ru"><i class="bi bi-envelope"></i> info@cableproduction.ru</a>
+            </div>
+            <div class="top-social">
+                <a href="#" class="text-white me-2"><i class="bi bi-telegram"></i></a>
+                <a href="#" class="text-white me-2"><i class="bi bi-whatsapp"></i></a>
+                <a href="https://github.com/ZeroMurder" class="text-white me-2" target="_blank"><i class="bi bi-github"></i></a>
+                <a href="#" class="text-white"><i class="bi bi-vk"></i></a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Навигация -->
+    <nav class="navbar navbar-expand-lg navbar-custom sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="bi bi-lightning-charge-fill me-2"></i>Cable<span>Production</span>
+            </a>
+            
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon text-white">
+                    <i class="bi bi-list"></i>
+                </span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#"><i class="bi bi-house"></i> Главная</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#catalog"><i class="bi bi-grid"></i> Каталог</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#manufacturers"><i class="bi bi-buildings"></i> Производители</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#about"><i class="bi bi-info-circle"></i> О нас</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#contacts"><i class="bi bi-geo-alt"></i> Контакты</a>
+                    </li>
+                    <li class="nav-item ms-2">
+                        <a class="nav-link" href="admin/admin_login.html" style="background-color: var(--green-dark);">
+                            <i class="bi bi-shield-lock"></i> Админ-панель
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Главный баннер -->
+    <section class="hero-section fade-in">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-7">
+                    <h1 class="hero-title">Кабельная продукция от ведущих производителей</h1>
+                    <p class="hero-subtitle">Агрегатор кабельной продукции с полной информацией о производителях, технических характеристиках и ценах. Более 1000 наименований в каталоге.</p>
+                    <div class="d-flex flex-wrap gap-3">
+                        <button class="btn btn-green" onclick="loadAllProducts()">Перейти в каталог</button>
+                        <button class="btn btn-outline-light" onclick="downloadPriceList()">Скачать прайс-лист</button>
+                    </div>
+                </div>
+                <div class="col-lg-5 d-none d-lg-block">
+                    <div class="text-center">
+                        <i class="bi bi-lightning-charge-fill" style="font-size: 200px; color: rgba(16, 185, 129, 0.2);"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Каталог продукции -->
+    <section id="catalog" class="py-5">
+        <div class="container">
+            <h2 class="section-title">Каталог продукции</h2>
+            
+            <div class="row g-4 mb-5">
+                <div class="col-md-3">
+                    <div class="category-card" onclick="filterByType('Силовой')">
+                        <div class="category-icon">
+                            <i class="bi bi-lightning"></i>
+                        </div>
+                        <h4>Силовые кабели</h4>
+                        <p class="text-muted">ВВГ, АВВГ, СИП и другие</p>
+                        <div class="mt-2">
+                            <small id="count-silovye" class="badge bg-green-primary">0 товаров</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="category-card" onclick="filterByType('Оптический')">
+                        <div class="category-icon">
+                            <i class="bi bi-wifi"></i>
+                        </div>
+                        <h4>Оптические кабели</h4>
+                        <p class="text-muted">Волоконно-оптические линии связи</p>
+                        <div class="mt-2">
+                            <small id="count-optika" class="badge bg-green-primary">0 товаров</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="category-card" onclick="filterByType('Витая пара')">
+                        <div class="category-icon">
+                            <i class="bi bi-hdd-network"></i>
+                        </div>
+                        <h4>Сетевые кабели</h4>
+                        <p class="text-muted">Витая пара, патч-корды</p>
+                        <div class="mt-2">
+                            <small id="count-setevye" class="badge bg-green-primary">0 товаров</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="category-card" onclick="filterByType('Коаксиальный')">
+                        <div class="category-icon">
+                            <i class="bi bi-tv"></i>
+                        </div>
+                        <h4>Коаксиальные кабели</h4>
+                        <p class="text-muted">Для телевидения и видеонаблюдения</p>
+                        <div class="mt-2">
+                            <small id="count-koaks" class="badge bg-green-primary">0 товаров</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <h3 class="mb-4" style="color: var(--green-light);">Популярные товары</h3>
+            
+            <!-- Лоадер для товаров -->
+            <div class="loader" id="productsLoader">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Загрузка...</span>
+                </div>
+                <p class="mt-3">Загрузка товаров...</p>
+            </div>
+            
+            <!-- Контейнер для товаров -->
+            <div class="row g-4" id="productsContainer">
+                <!-- Товары будут загружены через JavaScript -->
+            </div>
+            
+            <!-- Кнопка для загрузки всех товаров -->
+            <div class="text-center mt-5">
+                <button class="btn btn-green" onclick="loadAllProducts()">
+                    <i class="bi bi-eye me-2"></i>Показать все товары
+                </button>
+            </div>
+        </div>
+    </section>
+    
+    <!-- О нас -->
+    <section id="about" class="py-5" style="background-color: var(--black-secondary);">
+        <div class="container">
+            <h2 class="section-title center text-center">О нашем агрегаторе</h2>
+            <p class="text-center mb-5" style="max-width: 800px; margin: 0 auto; color: var(--text-gray);">
+                Мы предоставляем полную информацию о кабельной продукции от ведущих российских и зарубежных производителей. 
+                Наш агрегатор помогает быстро найти нужный товар, сравнить характеристики и цены. 
+                Все данные обновляются в реальном времени через админ-панель.
+            </p>
+            
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="feature-box">
+                        <i class="bi bi-search"></i>
+                        <h4>Удобный поиск</h4>
+                        <p>Фильтрация по типу, производителю, характеристикам и цене. Быстрый поиск нужного кабеля.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-box">
+                        <i class="bi bi-clipboard-data"></i>
+                        <h4>Актуальные данные</h4>
+                        <p>Данные синхронизируются с админ-панелью. Все изменения отображаются мгновенно.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-box">
+                        <i class="bi bi-graph-up"></i>
+                        <h4>Реальные цены</h4>
+                        <p>Цены обновляются ежедневно. Сравнение цен от разных поставщиков и производителей.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Статистика в реальном времени -->
+            <div class="row mt-5">
+                <div class="col-md-3 col-6 text-center">
+                    <div class="display-4 fw-bold text-green-primary" id="statsProducts">0</div>
+                    <div class="text-muted">Товаров в каталоге</div>
+                </div>
+                <div class="col-md-3 col-6 text-center">
+                    <div class="display-4 fw-bold text-green-primary" id="statsManufacturers">0</div>
+                    <div class="text-muted">Производителей</div>
+                </div>
+                <div class="col-md-3 col-6 text-center">
+                    <div class="display-4 fw-bold text-green-primary" id="statsCities">0</div>
+                    <div class="text-muted">Городов</div>
+                </div>
+                <div class="col-md-3 col-6 text-center">
+                    <div class="display-4 fw-bold text-green-primary" id="statsTypes">0</div>
+                    <div class="text-muted">Типов кабеля</div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Производители -->
+    <section id="manufacturers" class="py-5">
+        <div class="container">
+            <h2 class="section-title">Наши производители</h2>
+            
+            <!-- Лоадер для производителей -->
+            <div class="loader" id="manufacturersLoader">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Загрузка...</span>
+                </div>
+                <p class="mt-3">Загрузка производителей...</p>
+            </div>
+            
+            <!-- Контейнер для производителей -->
+            <div class="row g-4" id="manufacturersContainer">
+                <!-- Производители будут загружены через JavaScript -->
+            </div>
+        </div>
+    </section>
+    
+    <!-- Карта производителей -->
+    <section id="manufacturersMap" class="py-5" style="background-color: var(--black-secondary);">
+        <div class="container">
+            <h2 class="section-title center text-center">География производителей</h2>
+            <div class="map-placeholder">
+                <i class="bi bi-map"></i>
+                <h4 class="mb-3" style="color: var(--green-primary);">Интерактивная карта производителей</h4>
+                <p class="mb-4" style="color: var(--text-gray); max-width: 600px;">
+                    На карте отображены географические расположения заводов-производителей кабельной продукции.
+                    Данные загружаются из базы данных в реальном времени.
+                </p>
+                <div class="row g-3 mt-3" id="citiesStats">
+                    <!-- Статистика по городам будет загружена через JavaScript -->
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Подвал -->
+    <footer class="footer" id="contacts">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-lg-4">
+                    <h4 class="footer-title">CableProduction</h4>
+                    <p>Агрегатор кабельной продукции. Полная информация о производителях, технических характеристиках и ценах на кабельную продукцию. Данные обновляются в реальном времени.</p>
+                    <div class="mt-4">
+                        <a href="#" class="btn btn-outline-light me-2"><i class="bi bi-telegram"></i></a>
+                        <a href="#" class="btn btn-outline-light me-2"><i class="bi bi-whatsapp"></i></a>
+                        <a href="https://github.com/ZeroMurder" class="btn btn-outline-light me-2" target="_blank"><i class="bi bi-github"></i></a>
+                        <button class="btn btn-outline-light" onclick="showDataStatus()">
+                            <i class="bi bi-database me-1"></i>Статус данных
+                        </button>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-6">
+                    <h5 class="footer-title">Каталог</h5>
+                    <ul class="footer-links" id="catalogLinks">
+                        <!-- Ссылки будут сгенерированы через JavaScript -->
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-md-6">
+                    <h5 class="footer-title">Информация</h5>
+                    <ul class="footer-links">
+                        <li><a href="#" onclick="loadAboutSection()">О компании</a></li>
+                        <li><a href="#contacts">Контакты</a></li>
+                        <li><a href="#" onclick="showDeliveryInfo()">Доставка</a></li>
+                        <li><a href="#" onclick="showPaymentInfo()">Оплата</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-4">
+                    <h5 class="footer-title">Контакты</h5>
+                    <ul class="footer-links">
+                        <li><i class="bi bi-geo-alt me-2"></i> project-web-site</li>
+                        <li><i class="bi bi-envelope me-2"></i> test@gmail.com</li>
+                        <li><i class="bi bi-database me-2"></i> Данные обновлены: <span id="lastUpdate">сегодня</span></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom text-center">
+                <p>© 2026 CableProduction. Все права защищены.</p>
+                <p class="small text-muted">Агрегатор кабельной продукции | Данные синхронизируются с админ-панелью</p>
+                <p class="small text-muted mt-1">
+                    <span id="dataStats">Загружено 0 товаров от 0 производителей</span> | 
+                    <a href="#" class="text-muted" onclick="refreshData()">Обновить данные</a>
+                </p>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Модальное окно статуса данных -->
+    <div class="modal fade" id="dataStatusModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="bi bi-database me-2"></i>Статус данных системы</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <h6>Источник данных:</h6>
+                        <p>Данные загружаются из локальной базы данных (localStorage), которая синхронизирована с админ-панелью.</p>
+                    </div>
+                    <div class="mb-3">
+                        <h6>Статистика:</h6>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Товаров в каталоге
+                                <span class="badge bg-primary rounded-pill" id="modalProductsCount">0</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Производителей
+                                <span class="badge bg-success rounded-pill" id="modalManufacturersCount">0</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Активных товаров
+                                <span class="badge bg-info rounded-pill" id="modalActiveProducts">0</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Последнее обновление
+                                <span class="badge bg-warning rounded-pill" id="modalLastUpdate">-</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                    <button type="button" class="btn btn-primary" onclick="refreshData()">
+                        <i class="bi bi-arrow-clockwise me-2"></i>Обновить данные
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Модальное окно деталей товара -->
+    <div class="modal fade" id="productDetailModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="productDetailTitle">Детали товара</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="productDetailBody">
+                    <!-- Детали товара будут загружены через JavaScript -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                    <button type="button" class="btn btn-primary" onclick="requestPrice()">
+                        <i class="bi bi-cart me-2"></i>Запросить цену
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Глобальные переменные для хранения данных
+        let allProducts = [];
+        let allManufacturers = [];
+        let dataLoaded = false;
+        let lastUpdateTime = null;
+        
+        // Ключи для localStorage (должны совпадать с админ-панелью)
+        const PRODUCTS_KEY = 'cableProducts';
+        const MANUFACTURERS_KEY = 'cableManufacturers';
+        const SETTINGS_KEY = 'adminSettings';
+        
+        // Инициализация при загрузке страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            // Плавная прокрутка для ссылок меню
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    const targetId = this.getAttribute('href');
+                    if(targetId === '#') return;
+                    
+                    const targetElement = document.querySelector(targetId);
+                    if(targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+            
+            // Анимация элементов при прокрутке
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if(entry.isIntersecting) {
+                        entry.target.classList.add('fade-in');
+                    }
+                });
+            }, observerOptions);
+            
+            document.querySelectorAll('section').forEach(section => {
+                observer.observe(section);
+            });
+            
+            // Загрузка данных
+            loadData();
+            
+            // Обновление времени последнего обновления
+            updateLastUpdateTime();
+            
+            // Периодическая проверка обновлений данных (каждые 30 секунд)
+            setInterval(checkForUpdates, 30000);
+        });
+        
+        // Загрузка данных из localStorage
+        function loadData() {
+            showLoader('productsLoader', true);
+            showLoader('manufacturersLoader', true);
+            
+            // Загружаем продукты
+            const productsData = localStorage.getItem(PRODUCTS_KEY);
+            if (productsData) {
+                try {
+                    allProducts = JSON.parse(productsData);
+                    
+                    // Фильтруем только активные товары
+                    const activeProducts = allProducts.filter(product => 
+                        product.status === 'active' || product.status === undefined
+                    );
+                    
+                    // Обновляем статистику
+                    updateProductsStats(activeProducts);
+                    
+                    // Отображаем популярные товары (первые 6 активных)
+                    displayPopularProducts(activeProducts.slice(0, 6));
+                    
+                    // Обновляем счетчики категорий
+                    updateCategoryCounts(activeProducts);
+                    
+                    // Генерируем ссылки в каталоге
+                    generateCatalogLinks(activeProducts);
+                    
+                    dataLoaded = true;
+                    showNotification('Данные успешно загружены!', 'success');
+                } catch (error) {
+                    console.error('Ошибка при загрузке продуктов:', error);
+                    loadDefaultProducts();
+                }
+            } else {
+                // Если данных нет, загружаем демо данные
+                loadDefaultProducts();
+            }
+            
+            // Загружаем производителей
+            const manufacturersData = localStorage.getItem(MANUFACTURERS_KEY);
+            if (manufacturersData) {
+                try {
+                    allManufacturers = JSON.parse(manufacturersData);
+                    
+                    // Фильтруем только активных производителей
+                    const activeManufacturers = allManufacturers.filter(manufacturer => 
+                        manufacturer.status === 'active' || manufacturer.status === undefined
+                    );
+                    
+                    // Обновляем статистику
+                    updateManufacturersStats(activeManufacturers);
+                    
+                    // Отображаем производителей (первые 8 активных)
+                    displayManufacturers(activeManufacturers.slice(0, 8));
+                    
+                    // Обновляем статистику по городам
+                    updateCitiesStats(activeManufacturers);
+                } catch (error) {
+                    console.error('Ошибка при загрузке производителей:', error);
+                    loadDefaultManufacturers();
+                }
+            } else {
+                // Если данных нет, загружаем демо данные
+                loadDefaultManufacturers();
+            }
+            
+            // Обновляем общую статистику
+            updateOverallStats();
+            
+            // Скрываем лоадеры
+            setTimeout(() => {
+                showLoader('productsLoader', false);
+                showLoader('manufacturersLoader', false);
+            }, 500);
+        }
+        
+        // Загрузка демо продуктов
+        function loadDefaultProducts() {
+            allProducts = [
+                {
+                    id: 1,
+                    name: "Кабель ВВГнг 3х2.5",
+                    type: "Силовой",
+                    price: 45.50,
+                    unit: "м",
+                    specs: "Напряжение 0.66/1 кВ, сечение 3x2.5 мм², не распространяющий горение",
+                    manufacturer_id: 1,
+                    status: "active",
+                    created_at: "2024-01-15T10:30:00Z"
+                },
+                {
+                    id: 2,
+                    name: "Оптический кабель ОКБ-12",
+                    type: "Оптический",
+                    price: 150.00,
+                    unit: "м",
+                    specs: "12 волокон, бронированный, для прокладки в грунт",
+                    manufacturer_id: 2,
+                    status: "active",
+                    created_at: "2024-01-20T09:15:00Z"
+                },
+                {
+                    id: 3,
+                    name: "Кабель UTP Cat.6",
+                    type: "Витая пара",
+                    price: 25.30,
+                    unit: "м",
+                    specs: "Витая пара, 4 пары, категория 6, неэкранированный",
+                    manufacturer_id: 3,
+                    status: "active",
+                    created_at: "2024-01-25T11:20:00Z"
+                },
+                {
+                    id: 4,
+                    name: "Кабель РК-75",
+                    type: "Коаксиальный",
+                    price: 38.75,
+                    unit: "м",
+                    specs: "Коаксиальный кабель 75 Ом, для телевидения",
+                    manufacturer_id: 1,
+                    status: "active",
+                    created_at: "2024-02-01T14:20:00Z"
+                },
+                {
+                    id: 5,
+                    name: "Кабель СИП-4 16мм²",
+                    type: "Силовой",
+                    price: 89.90,
+                    unit: "м",
+                    specs: "Самонесущий изолированный провод, 16 мм²",
+                    manufacturer_id: 2,
+                    status: "active",
+                    created_at: "2024-02-05T13:10:00Z"
+                },
+                {
+                    id: 6,
+                    name: "Кабель ВВГнг-LS 5х6",
+                    type: "Силовой",
+                    price: 120.50,
+                    unit: "м",
+                    specs: "Пониженное дымо- и газовыделение, 5x6 мм²",
+                    manufacturer_id: 3,
+                    status: "active",
+                    created_at: "2024-02-10T16:45:00Z"
+                }
+            ];
+            
+            const activeProducts = allProducts.filter(product => product.status === 'active');
+            updateProductsStats(activeProducts);
+            displayPopularProducts(activeProducts.slice(0, 6));
+            updateCategoryCounts(activeProducts);
+            generateCatalogLinks(activeProducts);
+            
+            showNotification('Загружены демо данные. Добавьте свои данные через админ-панель.', 'info');
+        }
+        
+        // Загрузка демо производителей
+        function loadDefaultManufacturers() {
+            allManufacturers = [
+                {
+                    id: 1,
+                    name: "Энергомонтаж",
+                    city: "Москва",
+                    email: "info@energomontag.ru",
+                    phone: "+7 (495) 123-45-67",
+                    website: "energomontag.ru",
+                    description: "Производитель силовых кабелей",
+                    status: "active",
+                    featured: true,
+                    product_count: 15
+                },
+                {
+                    id: 2,
+                    name: "Электрокабель",
+                    city: "Санкт-Петербург",
+                    email: "sales@elektrokabel.ru",
+                    phone: "+7 (812) 234-56-78",
+                    website: "elektrokabel.ru",
+                    description: "Производитель оптических кабелей",
+                    status: "active",
+                    featured: false,
+                    product_count: 12
+                },
+                {
+                    id: 3,
+                    name: "Сибкабель",
+                    city: "Новосибирск",
+                    email: "contact@sibkabel.ru",
+                    phone: "+7 (383) 345-67-89",
+                    website: "sibkabel.ru",
+                    description: "Производитель кабельной продукции",
+                    status: "active",
+                    featured: true,
+                    product_count: 8
+                },
+                {
+                    id: 4,
+                    name: "Москабель",
+                    city: "Москва",
+                    email: "info@moskabel.ru",
+                    phone: "+7 (495) 456-78-90",
+                    website: "moskabel.ru",
+                    description: "Крупный производитель кабелей",
+                    status: "active",
+                    featured: true,
+                    product_count: 20
+                }
+            ];
+            
+            const activeManufacturers = allManufacturers.filter(m => m.status === 'active');
+            updateManufacturersStats(activeManufacturers);
+            displayManufacturers(activeManufacturers.slice(0, 8));
+            updateCitiesStats(activeManufacturers);
+        }
+        
+        // Отображение популярных товаров
+        function displayPopularProducts(products) {
+            const container = document.getElementById('productsContainer');
+            container.innerHTML = '';
+            
+            if (products.length === 0) {
+                container.innerHTML = `
+                    <div class="col-12 text-center py-5">
+                        <i class="bi bi-box-seam display-1 text-muted"></i>
+                        <h4 class="mt-3">Товары не найдены</h4>
+                        <p class="text-muted">Добавьте товары через админ-панель</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            products.forEach(product => {
+                const manufacturer = allManufacturers.find(m => m.id === product.manufacturer_id);
+                const productCard = `
+                    <div class="col-md-4">
+                        <div class="product-card">
+                            <div class="product-img">
+                                <i class="${getProductIcon(product.type)}"></i>
+                            </div>
+                            <div class="product-body">
+                                <h5 class="product-title">${product.name}</h5>
+                                <p class="product-specs">${product.specs || 'Технические характеристики не указаны'}</p>
+                                <div class="product-price">${formatCurrency(product.price)}/${product.unit || 'м'}</div>
+                                <div class="product-manufacturer">Производитель: ${manufacturer ? manufacturer.name : 'Не указан'}</div>
+                                <button class="btn btn-sm btn-green w-100" onclick="showProductDetail(${product.id})">
+                                    Подробнее
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += productCard;
+            });
+        }
+        
+        // Отображение всех товаров
+        function loadAllProducts() {
+            showLoader('productsLoader', true);
+            
+            setTimeout(() => {
+                const activeProducts = allProducts.filter(product => 
+                    product.status === 'active' || product.status === undefined
+                );
+                
+                displayPopularProducts(activeProducts);
+                
+                // Обновляем заголовок
+                const title = document.querySelector('#catalog h3');
+                if (title) {
+                    title.textContent = `Все товары (${activeProducts.length})`;
+                }
+                
+                showLoader('productsLoader', false);
+                
+                // Прокручиваем к каталогу
+                document.getElementById('catalog').scrollIntoView({ behavior: 'smooth' });
+            }, 500);
+        }
+        
+        // Фильтрация по типу
+        function filterByType(type) {
+            showLoader('productsLoader', true);
+            
+            setTimeout(() => {
+                const activeProducts = allProducts.filter(product => 
+                    (product.status === 'active' || product.status === undefined) && 
+                    product.type === type
+                );
+                
+                displayPopularProducts(activeProducts);
+                
+                // Обновляем заголовок
+                const title = document.querySelector('#catalog h3');
+                if (title) {
+                    title.textContent = `${type} кабели (${activeProducts.length})`;
+                }
+                
+                showLoader('productsLoader', false);
+                
+                // Прокручиваем к каталогу
+                document.getElementById('catalog').scrollIntoView({ behavior: 'smooth' });
+            }, 500);
+        }
+        
+        // Отображение производителей
+        function displayManufacturers(manufacturers) {
+            const container = document.getElementById('manufacturersContainer');
+            container.innerHTML = '';
+            
+            if (manufacturers.length === 0) {
+                container.innerHTML = `
+                    <div class="col-12 text-center py-5">
+                        <i class="bi bi-buildings display-1 text-muted"></i>
+                        <h4 class="mt-3">Производители не найдены</h4>
+                        <p class="text-muted">Добавьте производителей через админ-панель</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            manufacturers.forEach(manufacturer => {
+                const productsCount = allProducts.filter(p => p.manufacturer_id === manufacturer.id).length;
+                const manufacturerCard = `
+                    <div class="col-md-3 col-6">
+                        <div class="text-center p-3" style="background-color: var(--black-light); border-radius: var(--radius); cursor: pointer;" 
+                             onclick="showManufacturerProducts(${manufacturer.id})">
+                            <div class="mb-3">
+                                <i class="bi bi-building" style="font-size: 40px; color: var(--green-primary);"></i>
+                            </div>
+                            <h5>${manufacturer.name}</h5>
+                            <small class="text-muted">${manufacturer.city || 'Город не указан'}</small>
+                            <div class="mt-2">
+                                <span class="badge ${manufacturer.featured ? 'bg-warning' : 'bg-secondary'}">
+                                    ${productsCount} товаров
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += manufacturerCard;
+            });
+        }
+        
+        // Показать товары производителя
+        function showManufacturerProducts(manufacturerId) {
+            const manufacturer = allManufacturers.find(m => m.id === manufacturerId);
+            const manufacturerProducts = allProducts.filter(product => 
+                product.manufacturer_id === manufacturerId && 
+                (product.status === 'active' || product.status === undefined)
+            );
+            
+            showLoader('productsLoader', true);
+            
+            setTimeout(() => {
+                displayPopularProducts(manufacturerProducts);
+                
+                // Обновляем заголовок
+                const title = document.querySelector('#catalog h3');
+                if (title) {
+                    title.textContent = `Товары ${manufacturer.name} (${manufacturerProducts.length})`;
+                }
+                
+                showLoader('productsLoader', false);
+                
+                // Прокручиваем к каталогу
+                document.getElementById('catalog').scrollIntoView({ behavior: 'smooth' });
+            }, 500);
+        }
+        
+        // Обновление статистики продуктов
+        function updateProductsStats(products) {
+            document.getElementById('statsProducts').textContent = products.length;
+            
+            // Обновляем общую статистику в подвале
+            updateDataStats();
+        }
+        
+        // Обновление статистики производителей
+        function updateManufacturersStats(manufacturers) {
+            document.getElementById('statsManufacturers').textContent = manufacturers.length;
+            
+            // Подсчет уникальных городов
+            const cities = [...new Set(manufacturers.map(m => m.city).filter(city => city))];
+            document.getElementById('statsCities').textContent = cities.length;
+            
+            // Обновляем общую статистику в подвале
+            updateDataStats();
+        }
+        
+        // Обновление общей статистики
+        function updateOverallStats() {
+            const activeProducts = allProducts.filter(product => 
+                product.status === 'active' || product.status === undefined
+            );
+            const activeManufacturers = allManufacturers.filter(manufacturer => 
+                manufacturer.status === 'active' || manufacturer.status === undefined
+            );
+            
+            // Подсчет уникальных типов
+            const types = [...new Set(activeProducts.map(p => p.type).filter(type => type))];
+            document.getElementById('statsTypes').textContent = types.length;
+            
+            // Обновляем общую статистику в подвале
+            updateDataStats();
+        }
+        
+        // Обновление счетчиков категорий
+        function updateCategoryCounts(products) {
+            const counts = {
+                'Силовой': products.filter(p => p.type === 'Силовой').length,
+                'Оптический': products.filter(p => p.type === 'Оптический').length,
+                'Витая пара': products.filter(p => p.type === 'Витая пара').length,
+                'Коаксиальный': products.filter(p => p.type === 'Коаксиальный').length
+            };
+            
+            document.getElementById('count-silovye').textContent = `${counts['Силовой']} товаров`;
+            document.getElementById('count-optika').textContent = `${counts['Оптический']} товаров`;
+            document.getElementById('count-setevye').textContent = `${counts['Витая пара']} товаров`;
+            document.getElementById('count-koaks').textContent = `${counts['Коаксиальный']} товаров`;
+        }
+        
+        // Обновление статистики по городам
+        function updateCitiesStats(manufacturers) {
+            const citiesContainer = document.getElementById('citiesStats');
+            citiesContainer.innerHTML = '';
+            
+            // Группировка производителей по городам
+            const cityCounts = {};
+            manufacturers.forEach(manufacturer => {
+                if (manufacturer.city) {
+                    if (!cityCounts[manufacturer.city]) {
+                        cityCounts[manufacturer.city] = 0;
+                    }
+                    cityCounts[manufacturer.city]++;
+                }
+            });
+            
+            // Сортировка по количеству производителей
+            const sortedCities = Object.entries(cityCounts)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 4);
+            
+            sortedCities.forEach(([city, count]) => {
+                const cityCard = `
+                    <div class="col-md-3 col-6">
+                        <div class="text-center">
+                            <div class="mb-2"><i class="bi bi-geo-alt-fill" style="color: var(--green-primary); font-size: 24px;"></i></div>
+                            <div>${city}</div>
+                            <small class="text-muted">${count} ${getWordForm(count, ['завод', 'завода', 'заводов'])}</small>
+                        </div>
+                    </div>
+                `;
+                citiesContainer.innerHTML += cityCard;
+            });
+        }
+        
+        // Генерация ссылок в каталоге
+        function generateCatalogLinks(products) {
+            const linksContainer = document.getElementById('catalogLinks');
+            linksContainer.innerHTML = '';
+            
+            const types = [...new Set(products.map(p => p.type).filter(type => type))];
+            
+            types.forEach(type => {
+                const count = products.filter(p => p.type === type).length;
+                const link = document.createElement('li');
+                link.innerHTML = `<a href="#" onclick="filterByType('${type}')">${type} (${count})</a>`;
+                linksContainer.appendChild(link);
+            });
+        }
+        
+        // Обновление статистики данных в подвале
+        function updateDataStats() {
+            const activeProducts = allProducts.filter(product => 
+                product.status === 'active' || product.status === undefined
+            ).length;
+            
+            const activeManufacturers = allManufacturers.filter(manufacturer => 
+                manufacturer.status === 'active' || manufacturer.status === undefined
+            ).length;
+            
+            document.getElementById('dataStats').textContent = 
+                `Загружено ${activeProducts} товаров от ${activeManufacturers} производителей`;
+        }
+        
+        // Обновление времени последнего обновления
+        function updateLastUpdateTime() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('ru-RU', { 
+                hour: '2-digit', 
+                minute: '2-digit' 
+            });
+            
+            document.getElementById('lastUpdate').textContent = `сегодня ${timeString}`;
+            lastUpdateTime = now;
+        }
+        
+        // Показать детали товара
+        function showProductDetail(productId) {
+            const product = allProducts.find(p => p.id === productId);
+            const manufacturer = allManufacturers.find(m => m.id === product.manufacturer_id);
+            
+            if (!product) return;
+            
+            document.getElementById('productDetailTitle').textContent = product.name;
+            
+            const detailBody = document.getElementById('productDetailBody');
+            detailBody.innerHTML = `
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <h6>Технические характеристики:</h6>
+                            <p>${product.specs || 'Не указаны'}</p>
+                        </div>
+                        <div class="mb-3">
+                            <h6>Тип:</h6>
+                            <p>${product.type || 'Не указан'}</p>
+                        </div>
+                        <div class="mb-3">
+                            <h6>Цена:</h6>
+                            <h4 class="text-green-primary">${formatCurrency(product.price)}/${product.unit || 'м'}</h4>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <h6>Производитель:</h6>
+                            <p>${manufacturer ? manufacturer.name : 'Не указан'}</p>
+                            ${manufacturer ? `
+                                <p><small class="text-muted">${manufacturer.city || ''}</small></p>
+                                ${manufacturer.email ? `<p><small>Email: ${manufacturer.email}</small></p>` : ''}
+                                ${manufacturer.phone ? `<p><small>Телефон: ${manufacturer.phone}</small></p>` : ''}
+                            ` : ''}
+                        </div>
+                        <div class="mb-3">
+                            <h6>Статус:</h6>
+                            <span class="badge ${product.status === 'active' ? 'bg-success' : 'bg-secondary'}">
+                                ${product.status === 'active' ? 'В наличии' : 'Недоступен'}
+                            </span>
+                        </div>
+                        <div class="mb-3">
+                            <h6>Дата добавления:</h6>
+                            <p>${formatDate(product.created_at)}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            const modal = new bootstrap.Modal(document.getElementById('productDetailModal'));
+            modal.show();
+        }
+        
+        // Показать статус данных
+        function showDataStatus() {
+            const activeProducts = allProducts.filter(product => 
+                product.status === 'active' || product.status === undefined
+            ).length;
+            
+            const activeManufacturers = allManufacturers.filter(manufacturer => 
+                manufacturer.status === 'active' || manufacturer.status === undefined
+            ).length;
+            
+            document.getElementById('modalProductsCount').textContent = allProducts.length;
+            document.getElementById('modalManufacturersCount').textContent = allManufacturers.length;
+            document.getElementById('modalActiveProducts').textContent = activeProducts;
+            document.getElementById('modalLastUpdate').textContent = 
+                lastUpdateTime ? lastUpdateTime.toLocaleTimeString('ru-RU') : '-';
+            
+            const modal = new bootstrap.Modal(document.getElementById('dataStatusModal'));
+            modal.show();
+        }
+        
+        // Обновить данные
+        function refreshData() {
+            showNotification('Обновление данных...', 'info');
+            
+            // Имитация загрузки новых данных
+            setTimeout(() => {
+                loadData();
+                updateLastUpdateTime();
+                showNotification('Данные успешно обновлены!', 'success');
+            }, 1000);
+        }
+        
+        // Проверка обновлений
+        function checkForUpdates() {
+            // Здесь можно добавить логику проверки изменений в localStorage
+            // Например, сравнение временных меток или хешей данных
+            console.log('Проверка обновлений данных...');
+        }
+        
+        // Скачать прайс-лист
+        function downloadPriceList() {
+            const activeProducts = allProducts.filter(product => 
+                product.status === 'active' || product.status === undefined
+            );
+            
+            if (activeProducts.length === 0) {
+                showNotification('Нет товаров для экспорта', 'warning');
+                return;
+            }
+            
+            // Формируем CSV
+            let csv = 'Название;Тип;Цена;Единица;Производитель\n';
+            
+            activeProducts.forEach(product => {
+                const manufacturer = allManufacturers.find(m => m.id === product.manufacturer_id);
+                csv += `"${product.name}";"${product.type || ''}";${product.price};"${product.unit || 'м'}";"${manufacturer ? manufacturer.name : ''}"\n`;
+            });
+            
+            // Создаем и скачиваем файл
+            const blob = new Blob(['\ufeff', csv], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.setAttribute('href', url);
+            link.setAttribute('download', `Прайс-лист_${new Date().toISOString().slice(0,10)}.csv`);
+            link.click();
+            
+            showNotification('Прайс-лист успешно скачан!', 'success');
+        }
+        
+        // Запрос цены
+        function requestPrice() {
+            showNotification('Запрос цены отправлен производителю!', 'success');
+            bootstrap.Modal.getInstance(document.getElementById('productDetailModal')).hide();
+        }
+        
+        // Вспомогательные функции
+        
+        // Показать/скрыть лоадер
+        function showLoader(loaderId, show) {
+            const loader = document.getElementById(loaderId);
+            if (loader) {
+                loader.classList.toggle('active', show);
+            }
+        }
+        
+        // Показать уведомление
+        function showNotification(message, type = 'info') {
+            const notificationArea = document.getElementById('notificationArea');
+            const alertClass = {
+                'success': 'alert-success',
+                'error': 'alert-danger',
+                'warning': 'alert-warning',
+                'info': 'alert-info'
+            }[type] || 'alert-info';
+            
+            const notification = document.createElement('div');
+            notification.className = `alert ${alertClass} alert-dismissible fade show alert-notification`;
+            notification.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"></button>
+            `;
+            
+            notificationArea.appendChild(notification);
+            
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.remove();
+                }
+            }, 5000);
+        }
+        
+        // Форматирование валюты
+        function formatCurrency(amount) {
+            if (!amount) return '0 руб.';
+            return new Intl.NumberFormat('ru-RU', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            }).format(amount) + ' руб.';
+        }
+        
+        // Форматирование даты
+        function formatDate(dateString) {
+            if (!dateString) return 'Не указана';
+            const date = new Date(dateString);
+            return date.toLocaleDateString('ru-RU');
+        }
+        
+        // Получение иконки для типа товара
+        function getProductIcon(type) {
+            const icons = {
+                'Силовой': 'bi bi-lightning-fill',
+                'Оптический': 'bi bi-wifi',
+                'Витая пара': 'bi bi-hdd-network',
+                'Коаксиальный': 'bi bi-tv',
+                'СИП': 'bi bi-lightning-charge',
+                'Контрольный': 'bi bi-speedometer',
+                'Температурный': 'bi bi-thermometer'
+            };
+            
+            return icons[type] || 'bi bi-box-seam';
+        }
+        
+        // Получение правильной формы слова
+        function getWordForm(number, forms) {
+            number = Math.abs(number) % 100;
+            const remainder = number % 10;
+            
+            if (number > 10 && number < 20) return forms[2];
+            if (remainder > 1 && remainder < 5) return forms[1];
+            if (remainder === 1) return forms[0];
+            return forms[2];
+        }
+        
+        // Функции для показа информации
+        function loadAboutSection() {
+            document.getElementById('about').scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        function showDeliveryInfo() {
+            showNotification('Информация о доставке: доставка по России 3-7 дней. Самовывоз со склада в Москве.', 'info');
+        }
+        
+        function showPaymentInfo() {
+            showNotification('Способы оплаты: наличные, банковская карта, безналичный расчет для юридических лиц.', 'info');
+        }
+        
+        // Экспорт данных для админ-панели
+        window.getSiteData = function() {
+            return {
+                products: allProducts,
+                manufacturers: allManufacturers,
+                lastUpdate: lastUpdateTime,
+                stats: {
+                    totalProducts: allProducts.length,
+                    activeProducts: allProducts.filter(p => p.status === 'active' || p.status === undefined).length,
+                    totalManufacturers: allManufacturers.length,
+                    activeManufacturers: allManufacturers.filter(m => m.status === 'active' || m.status === undefined).length
+                }
+            };
+        };
+        
+        // Функция для обновления данных из админ-панели
+        window.updateFromAdmin = function(products, manufacturers) {
+            allProducts = products;
+            allManufacturers = manufacturers;
+            
+            // Сохраняем в localStorage
+            localStorage.setItem(PRODUCTS_KEY, JSON.stringify(products));
+            localStorage.setItem(MANUFACTURERS_KEY, JSON.stringify(manufacturers));
+            
+            // Обновляем отображение
+            loadData();
+            updateLastUpdateTime();
+            
+            showNotification('Данные успешно обновлены из админ-панели!', 'success');
+            
+            return true;
+        };
+    </script>
+</body>
+</html>
